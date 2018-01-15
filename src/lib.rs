@@ -1,4 +1,5 @@
-#![feature(conservative_impl_trait)]
+#[allow(unused_imports)]
+// This would be flagged as an unused import but we actually use it in the tests module
 #[macro_use]
 extern crate serde_json;
 use serde_json::value::{Value, Number};
