@@ -3,6 +3,8 @@
 #[macro_use]
 extern crate serde_json;
 use serde_json::value::{Value, Number};
+extern crate serde;
+use serde::de::DeserializeOwned;
 
 #[cfg(test)]
 mod tests {
@@ -125,8 +127,16 @@ impl<'a> MatchStack<'a> {
         }).collect()
     }
 
-    pub fn string(self) -> Vec<&'a str> {
+    pub fn str(self) -> Vec<&'a str> {
         self.value().into_iter().flat_map(|v| v.as_str()).collect()
+    }
+
+    pub fn string(self) -> Vec<String> {
+        self.str().into_iter().map(|s| s.to_owned()).collect()
+    }
+
+    pub fn deserialize<T: DeserializeOwned>(self) -> Vec<T> {
+        self.value().into_iter().filter_map(|v| serde_json::from_value(v.clone()).ok()).collect()
     }
 }
 
